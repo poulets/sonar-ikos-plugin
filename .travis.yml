@@ -1,0 +1,32 @@
+language: java
+sudo: false
+install: true
+
+addons:
+  sonarcloud:
+    organization: "poulets"
+
+jdk:
+- oraclejdk8
+
+script:
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+
+cache:
+  directories:
+  - '$HOME/.m2/repository'
+  - '$HOME/.sonar/cache'
+
+notifications:
+  email: false
+  
+deploy:
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: "target/sonar-ikos-plugin-*.jar"
+  skip_cleanup: true
+  name: "SonarQube ikos Plugin"
+  draft: true
+  on:
+    branch: master
